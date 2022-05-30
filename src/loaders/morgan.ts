@@ -7,6 +7,7 @@ export default function morganConfigWithLogger(tokens: TokenIndexer<Request, Res
   const authorizationHeader = req.headers['authorization'];
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   const userAgent = req.get('User-Agent');
+  const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   logger.info(`📍 ${[
     tokens.method(req, res),
     "-",
@@ -21,5 +22,5 @@ export default function morganConfigWithLogger(tokens: TokenIndexer<Request, Res
     '-',
     tokens['response-time'](req, res), 
     'ms',
-  ].join(' ')}`, { type: LogTypes.Network, authorizationHeader })
+  ].join(' ')}`, { type: LogTypes.Network, authorizationHeader, requestUrl: fullUrl })
 }
